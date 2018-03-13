@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>ALL BOOKED</h1>
+<?php
+session_start();
+	
+	if(isset($_POST['reg_user'])) {
+
+	$conn = mysqli_connect('localhost', 'root', '','railway');
+	mysqli_select_db($conn,'railway');
+	$global_tid = $_SESSION['global_trainid'];
+	$sql = " select * from seat where seat_num not in (select seat_id from combinetable where train_id='$global_tid');";
+			$result = mysqli_query($conn, $sql);
+			if (mysqli_num_rows($result)>0) {
+			// output data of each row
+			echo "<table border=1 align=\"center\" style=\"border-spacing:2px;color:white;border-style: inset;border-width: 3px;border-color: red;\">
+				<tr>
+					<th>Available Seats</th>
+				</tr>";
+				while($row = mysqli_fetch_assoc($result)) {
+					echo "<tr>";
+						echo "<td>" . $row['seat_num'] . "</td>";
+					echo "</tr>";
+				}
+				echo "</table>";
+			} 
+			else {
+				echo "0 results";
+			}
+?>
+</body>
+</html>
